@@ -1,95 +1,59 @@
 package ca.ualberta.cs.lonelytwitter;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-/**
- * Created by sstuart on 1/17/17.
- * <p>
- * Tweet class is a super class that implements Tweetable
- */
-// all java classes inherite from the object class and inherit some of its methods
+import io.searchbox.annotations.JestId;
+
 public abstract class Tweet implements Tweetable {
-
-    private Date date;
     private String message;
-    private ArrayList<String> Moods = new ArrayList<String>();
+    private Date date;
 
+    public String getId() {
+        return id;
+    }
 
-    /**
-     * Instantiates a new Tweet.
-     *
-     * @param date    the date
-     * @param message the message
-     * @throws TweetToLongException the tweet to long exception
-     */
-    public Tweet (Date date, String message) throws TweetToLongException {
-        this.setMessage(message);
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @JestId
+    private String id;
+
+    public Tweet(String message){
+        this.message = message;
+        this.date = new Date();
+    }
+
+    public Tweet(String message, Date date){
+        this.message = message;
         this.date = date;
-        this.Moods.add("Anger");
-        this.Moods.add("Happy");
     }
 
-    /**
-     * Instantiates a new Tweet.
-     *
-     * @param message the message
-     * @throws TweetToLongException the tweet to long exception
-     */
-    public Tweet(String message) throws TweetToLongException {
-        this.setMessage(message);
-        this.date = new Date(); //current time and date
+    @Override
+    public String toString(){
+        return message;
     }
 
-
-    /**
-     * Is important boolean.
-     *
-     * @return the boolean
-     */
-    public abstract boolean isImportant();
+    public abstract Boolean isImportant();
 
 
-    public Date getDate() {
-        return date;
+    public void setMessage(String message) throws TweetTooLongException {
+        if (message.length() > 140){
+            //Do Something!
+            throw new TweetTooLongException();
+        }
+        this.message = message;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getMessage() {
         return message;
     }
 
-    /**
-     * Sets date.
-     *
-     * @param date the date
-     */
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    /**
-     * Sets message.
-     *
-     * @param message the message
-     * @throws TweetToLongException the tweet to long exception
-     */
-    public void setMessage(String message) throws TweetToLongException {
-        if(message.length() >140)
-        {
-            // todo throw an error here
-            throw new TweetToLongException();
-        }
-        else
-        {
-            this.message = message;
-        }
-    }
-
-
-    @Override
-    public String toString()
-    {
-        return date.toString() + " | " + message;
+    public Date getDate() {
+        return date;
     }
 }
